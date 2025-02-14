@@ -11,40 +11,11 @@ export default function Home() {
   
       const connectMetaMask = async () => {
         if (typeof window.ethereum !== 'undefined') {
-          try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            setAccount(accounts[0]);
-          } catch (error) {
-            console.error("User rejected the request.");
-          }
-        } else {
-          console.error("MetaMask is not installed.");  
-        }
-      };
-    
-      useEffect(() => {
-        if (window.ethereum) {
-          window.ethereum.on('accountsChanged', (accounts) => {
-            setAccount(accounts[0]);
-          });
-    
-          window.ethereum.on('chainChanged', () => {
-            window.location.reload();
-          });
-        }
-    
-        return () => {
-          if (window.ethereum) {
-            window.ethereum.removeListener('accountsChanged', (accounts) => {
-              setAccount(accounts[0]);
-            });
-    
-            window.ethereum.removeListener('chainChanged', () => {
-              window.location.reload();
-            });
-          }
-        };
-      }, []);
+          let ourchainId = await window.ethereum.request({ method: 'eth_chainId' });
+          setChainId(ourchainId);
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          setUserId(accounts[0]);
+      }};
 
     const setMessage = async () => {
         console.log("setting message")
@@ -54,7 +25,6 @@ export default function Home() {
                 console.log("Please install MetaMask!");
                 return;
             }
-
             // Check if we're on the correct network
             const provider = new ethers.providers.Web3Provider(ethereum);
             const network = await provider.getNetwork();

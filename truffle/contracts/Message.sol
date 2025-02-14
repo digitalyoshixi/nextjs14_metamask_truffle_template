@@ -5,6 +5,9 @@ contract Message {
     function setMessage(string memory _message) public {
         message = _message;
     }
+    function setMessageCool() public {
+        message = "hi";
+    }
     function getMessage() public view returns (string memory) {
         return message;
     }
